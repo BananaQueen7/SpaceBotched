@@ -12,6 +12,8 @@ public class GrabController : MonoBehaviour
 
 	public bool isHoldingItem;
 
+	PlayerMovement playermovement; 
+
 
 	void Start()
     {
