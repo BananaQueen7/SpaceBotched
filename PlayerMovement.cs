@@ -5,20 +5,40 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
 
-    Rigidbody2D rigidbody2d;
+public GrabController grabController;
+
+
+    Rigidbody2D rb;
 
     [Header("Movement Settings")]
     [SerializeField] float moveSpeed = 5f;
     [SerializeField] float jumpPower = 10f;
+    [SerializeField] float increasedGravity = 10f;
+
+    public float normalGravityScale;
+    public float newGravityScale; 
 
     [Header("Bools")]
     [SerializeField] bool isGrounded = false;
+
+    [SerializeField] bool isHoldingItem = false;
+    
+
+
+
+
+
 
 
     // Start is called before the first frame update
     void Start()
     {
-        rigidbody2d = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>();
+        grabController.isHoldingItem = false;
+
+        grabController = GetComponent<GrabController>();
+
+        normalGravityScale = 0.5f; 
     }
 
     // Update is called once per frame
@@ -28,13 +48,29 @@ public class PlayerMovement : MonoBehaviour
         Vector3 Move = new Vector3(Input.GetAxis("Horizontal"), 0, 0);
         transform.position += Move * Time.deltaTime * moveSpeed;
         Jump();
+
+
+    }
+
+   public void FixedUpdate()
+    {
+        if (grabController.isHoldingItem)
+        {
+            rb.gravityScale = newGravityScale;
+            Debug.Log("Gravity scale increased");
+        }
+        else
+        {
+            rb.gravityScale = normalGravityScale;
+
+        }
     }
 
     void Jump()
     {
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded == true)
         {
-            rigidbody2d.AddForce(new Vector2(0f, jumpPower), ForceMode2D.Impulse);
+            rb.AddForce(new Vector2(0f, jumpPower), ForceMode2D.Impulse);
             isGrounded = false;
         }
     }
