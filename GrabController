@@ -2,81 +2,94 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class GrabController : MonoBehaviour
 {
 
-public GrabController grabController;
+	 Rigidbody2D rb;
+	public Transform grabDetect;
+	public Transform grabDetect2;
+	public Transform Holder;
+	public Transform Holder2;
+	public float rayDist;
+
+	public bool isHoldingItem;
+
+	public float normalGravityScale;
+
+	public PlayerMovement playerMovement; 
 
 
-    Rigidbody2D rb;
-
-    [Header("Movement Settings")]
-    [SerializeField] float moveSpeed = 5f;
-    [SerializeField] float jumpPower = 10f;
-    [SerializeField] float increasedGravity = 10f;
-
-    public float normalGravityScale;
-    public float newGravityScale; 
-
-    [Header("Bools")]
-    [SerializeField] bool isGrounded = false;
-
-    [SerializeField] bool isHoldingItem = false;
-    
-
-
-
-
-
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        rb = GetComponent<Rigidbody2D>();
-        grabController.isHoldingItem = false;
-
-        grabController = GetComponent<GrabController>();
-
-        normalGravityScale = 0.5f; 
-    }
-
-    // Update is called once per frame
-    void Update()
+	void Start()
     {
 
-        Vector3 Move = new Vector3(Input.GetAxis("Horizontal"), 0, 0);
-        transform.position += Move * Time.deltaTime * moveSpeed;
-        Jump();
+		
+		playerMovement = GetComponent<PlayerMovement>();
+
+		
+	}
 
 
-    }
+	// Update is called once per frame
+	public void Update()
+	{
+		RaycastHit2D grabCheck = Physics2D.Raycast(grabDetect.position, Vector2.right * transform.localScale, rayDist);
 
-   public void FixedUpdate()
-    {
-        if (grabController.isHoldingItem)
-        {
-            rb.gravityScale = newGravityScale;
-            Debug.Log("Gravity scale increased");
-        }
-        else
-        {
-            rb.gravityScale = normalGravityScale;
+		if (grabCheck.collider != null && grabCheck.collider.tag == "Pickup")
+		{
+			if (Input.GetKey(KeyCode.E))
+			{
+				grabCheck.collider.gameObject.transform.parent = Holder;
+				grabCheck.collider.gameObject.transform.position = Holder.position;
+				grabCheck.collider.gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
+				Debug.Log("Item grabbed");
 
-        }
-    }
+				isHoldingItem = true;
+				Debug.Log("isHoldItem = true");
+				
 
-    void Jump()
-    {
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded == true)
-        {
-            rb.AddForce(new Vector2(0f, jumpPower), ForceMode2D.Impulse);
-            isGrounded = false;
-        }
-    }
 
-    void OnCollisionEnter2D(Collision2D other)
-    {
-        isGrounded = true;
-    }
+			}
+			if (Input.GetKey(KeyCode.R))
+			{
+				grabCheck.collider.gameObject.transform.parent = null;
+				grabCheck.collider.gameObject.GetComponent<Rigidbody2D>().isKinematic = false;
+				Debug.Log("Item released");
+
+				isHoldingItem = false;
+				Debug.Log("isHoldingItem = false");
+
+				rb.gravityScale = normalGravityScale;
+				
+			}
+		}
+
+		RaycastHit2D grabCheck2 = Physics2D.Raycast(grabDetect2.position, Vector2.right * transform.localScale, rayDist);
+
+		if (grabCheck2.collider != null && grabCheck2.collider.tag == "Pickup")
+		{
+			if (Input.GetKey(KeyCode.E))
+			{
+				grabCheck2.collider.gameObject.transform.parent = Holder2;
+				grabCheck2.collider.gameObject.transform.position = Holder2.position;
+				grabCheck2.collider.gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
+				Debug.Log("Item grabbed");
+
+				isHoldingItem = true;
+				Debug.Log("isHoldItem = true");
+
+
+			}
+			if (Input.GetKey(KeyCode.R))
+			{
+				grabCheck2.collider.gameObject.transform.parent = null;
+				grabCheck2.collider.gameObject.GetComponent<Rigidbody2D>().isKinematic = false;
+				Debug.Log("Item released");
+
+				isHoldingItem = false;
+				Debug.Log("isHoldItem = false");
+
+				rb.gravityScale = normalGravityScale;
+			}
+		}
+	}
 }
