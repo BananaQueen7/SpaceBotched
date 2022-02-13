@@ -1,0 +1,115 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class GrabController : MonoBehaviour
+{
+
+	 Rigidbody2D rb;
+	public Transform grabDetect;
+	public Transform grabDetect2;
+	public Transform Holder;
+	public Transform Holder2;
+	public float rayDist;
+
+	public bool isHoldingItem;
+	public bool canHoldItem;
+
+	public float normalGravityScale;
+
+	public PlayerMovement playerMovement; 
+
+
+
+
+	void Start()
+    {
+
+		
+		playerMovement = GetComponent<PlayerMovement>();
+		rb = GetComponent<Rigidbody2D>();
+		
+		canHoldItem = true;
+		
+	}
+
+
+	// Update is called once per frame
+	public void Update()
+	{
+		RaycastHit2D grabCheck = Physics2D.Raycast(grabDetect.position, Vector2.right * transform.localScale, rayDist);
+
+		if (grabCheck.collider != null && grabCheck.collider.tag == "Pickup")
+		{
+
+			if (Input.GetKeyDown(KeyCode.E))
+			{
+				if (canHoldItem)
+				{
+					grabCheck.collider.gameObject.transform.parent = Holder;
+					grabCheck.collider.gameObject.transform.position = Holder.position;
+					grabCheck.collider.gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
+					Debug.Log("Item grabbed");
+
+					isHoldingItem = true;
+					Debug.Log("isHoldItem = true");
+					canHoldItem = false;
+
+				}
+				
+			}
+			if (Input.GetKeyDown(KeyCode.R))
+			{
+				grabCheck.collider.gameObject.transform.parent = null;
+				grabCheck.collider.gameObject.GetComponent<Rigidbody2D>().isKinematic = false;
+				Debug.Log("Item released");
+
+				isHoldingItem = false;
+				Debug.Log("isHoldingItem = false");
+
+				canHoldItem = true;
+				Debug.Log("canHoldItem = true");
+
+				rb.gravityScale = normalGravityScale;
+				Debug.Log("Normal gravity applied");				
+			}
+		}
+
+		RaycastHit2D grabCheck2 = Physics2D.Raycast(grabDetect2.position, Vector2.right * transform.localScale, rayDist);
+
+		if (grabCheck2.collider != null && grabCheck2.collider.tag == "Pickup")
+		{
+			if (Input.GetKey(KeyCode.E))
+			{
+				if (canHoldItem)
+				{
+					grabCheck2.collider.gameObject.transform.parent = Holder2;
+					grabCheck2.collider.gameObject.transform.position = Holder2.position;
+					grabCheck2.collider.gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
+					Debug.Log("Item grabbed");
+
+					isHoldingItem = true;
+					Debug.Log("isHoldItem = true");
+					canHoldItem = false;
+				}
+
+
+			}
+			if (Input.GetKeyDown(KeyCode.R))
+			{
+				grabCheck2.collider.gameObject.transform.parent = null;
+				grabCheck2.collider.gameObject.GetComponent<Rigidbody2D>().isKinematic = false;
+				Debug.Log("Item released");
+
+				isHoldingItem = false;
+				Debug.Log("isHoldItem = false");
+
+				canHoldItem = true;
+				Debug.Log("canHoldItem = true");
+
+				rb.gravityScale = normalGravityScale;
+				Debug.Log("normal Gravity applied");
+			}
+		}
+	}
+}
