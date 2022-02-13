@@ -5,17 +5,37 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
+
+
+    [SerializeField] GameObject mainMenu;
+  [SerializeField] GameObject optionsMenu;
    
-    public void PlayGame()
+
+    void Start()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+      
     }
 
-    public void QuitGame()
+    public void PlayButton()
     {
-        Debug.Log("QUIT");
-        Application.Quit();
-
+         SceneManager.LoadScene("Level1");
     }
 
+   public void mainMenuButton()
+    {
+        mainMenu.SetActive(true);
+        optionsMenu.SetActive(false);
+    }
+
+    public void OptionsButton()
+    {
+        optionsMenu.SetActive(true);
+        mainMenu.SetActive(false);
+    }
+
+     public void QuitButton()
+  {
+      Application.Quit();
+      Debug.Log("Quit!");
+  }
 }
