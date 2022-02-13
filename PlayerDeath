@@ -1,0 +1,62 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class PlayerDeath : MonoBehaviour
+{
+
+private Animator anim;
+private Rigidbody2D rb;
+
+
+
+[SerializeField] AudioSource deathSound;
+[SerializeField] AudioSource mainMusic;
+
+[SerializeField] GameObject gameOverScreen;
+
+bool isDead;
+
+PlayerMovement pM;
+
+
+
+
+
+private void Start()
+{
+    pM = GetComponent<PlayerMovement>();
+    anim = GetComponent<Animator>();
+    rb = GetComponent<Rigidbody2D>();
+    isDead = false;
+}
+ 
+
+    //public GameObject orbs;
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            Die();
+        }
+    }
+
+    public void Die()
+    {
+        mainMusic.mute = !mainMusic.mute;
+        deathSound.Play();
+        rb.bodyType = RigidbodyType2D.Static;
+        anim.SetTrigger("death");
+        pM.moveSpeed = 0f;
+        isDead = true;
+        Debug.Log("Dead!");
+        gameOverScreen.SetActive(true);
+
+    }
+
+    public void ReloadScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+}
