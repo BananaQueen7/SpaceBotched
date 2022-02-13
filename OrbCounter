@@ -1,0 +1,38 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using TMPro;
+
+public class OrbCounter : MonoBehaviour
+{
+
+       int _count = 0;
+
+    void OnTriggerEnter2D(Collider2D other) {
+        Debug.Log("Orb recognised!");
+
+      if (other.gameObject.CompareTag("Pickup")) {
+        _count++;
+        CheckForWinCondition();
+        Debug.Log("orbs = " + _count);
+      }
+    }
+
+    void OnTriggerExit2D(Collider2D other) {
+      if (other.gameObject.CompareTag("Pickup")) {
+        _count--;
+        
+        Debug.Log("orbs = " + _count);
+      }
+    }
+
+    void CheckForWinCondition() {
+      if (_count >= 5) {
+        Win();
+      }
+    }
+
+    void Win() {
+      Debug.Log("You win!");
+    }
+}
