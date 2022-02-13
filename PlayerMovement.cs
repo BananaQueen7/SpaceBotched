@@ -11,7 +11,7 @@ public GrabController grabController;
     Rigidbody2D rb;
 
     [Header("Movement Settings")]
-    [SerializeField] float moveSpeed = 5f;
+    [SerializeField] public float moveSpeed = 5f;
     [SerializeField] float jumpPower = 10f;
     [SerializeField] float increasedGravity = 10f;
 
@@ -57,7 +57,7 @@ public GrabController grabController;
         if (grabController.isHoldingItem)
         {
             rb.gravityScale = newGravityScale;
-            Debug.Log("Gravity scale increased");
+            
         }
         else
         {
